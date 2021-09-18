@@ -4,5 +4,6 @@
 #include "helpers/main_imports.hpp"
 #include "helpers/hash.hpp"
 #include "helpers/utility.hpp"
+#include "helpers/benchmark.hpp"
 
 #endif

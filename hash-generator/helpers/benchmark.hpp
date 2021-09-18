@@ -3,6 +3,7 @@
 
 #include "main_imports.hpp"
 #include "hash.hpp"
+#include "utility.hpp"
 
 void benchmark(); //function that does the benchmark of the hashing function
 

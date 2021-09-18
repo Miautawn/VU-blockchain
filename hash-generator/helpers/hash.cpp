@@ -22,7 +22,7 @@ string dj_hash(string input) {
         sum += int(input[i]);
     }
 
-    cout<<"suma: "<<sum<<endl;
+    // cout<<"suma: "<<sum<<endl;
 
     string full_hex = "";
 
