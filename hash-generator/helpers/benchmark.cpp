@@ -41,5 +41,22 @@ void benchmark() {
     if(pass_flag) cout<<"All outputs are the same, continuing..."<<endl<<endl;
     else { cout<<"There was a missmatch between the outputs, aborting..."<<endl; return; }
 
+    cout<<"\nSTAGE 2 - SPEED TEST"<<endl<<endl;
+
+    fstream speed_input("./benchmark/stage_2/konstitucija.txt");
+    Timer timer;
+    double full_time = 0;
+    string line;
+
+    while(getline(speed_input, line)) {
+        timer.reset();
+        dj_hash(line);
+        full_time += timer.current_time();
+    }
+
+    cout<<"Time taken: "<<full_time<<" seconds"<<endl;
+
+    cout<<"\nSTAGE 3 - UNKNOWN TEST"<<endl<<endl;
+
 
 }
