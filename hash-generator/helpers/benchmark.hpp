@@ -5,6 +5,7 @@
 #include "hash.hpp"
 #include "utility.hpp"
 #include "timer.hpp"
+#include <bitset>
 
 void benchmark(); //function that does the benchmark of the hashing function
 
