@@ -75,10 +75,17 @@ ___
 
 ### STAGE 2 - SPEED TEST
 The speed of the this hashing algorithm was measured to check the 4'th requirement - time complexity. By definition it is **O(n)**. The speed of the hash generator was measured by hashing each line of the ```helpers\stage_2\konstitucija.txt``` file excluding the IO parts of the process.
+
+The process was repeasted for 5000 epochs and the average was taken.  
+Other popular hashing algorithms were tested this way as well.
 ```
 STAGE 2 - SPEED TEST
 
-Time taken: 0.00378237 seconds
+Number of episodes: 500
+DJ hash    avg time: 0.187317ms
+md5        avg time: 1.10642ms
+SHA1       avg time: 1.59822ms
+SHA256     avg time: 2.1451ms
 ```
 ___
 ### STAGE 3 - COLLISION TEST
