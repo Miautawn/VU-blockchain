@@ -3,12 +3,11 @@
 
 int main() {
 
-
     benchmark();
 
     // string input;
 
-    // if(yes_or_no("Do you want to read from file?")) {
+    // if(false/*yes_or_no("Do you want to read from file?")*/) {
 
     //     // reading from file
     //     string filename;

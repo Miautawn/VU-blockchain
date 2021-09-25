@@ -43,18 +43,48 @@ void benchmark() {
 
     cout<<"\nSTAGE 2 - SPEED TEST"<<endl<<endl;
 
-    fstream speed_input("./benchmark/stage_2/konstitucija.txt");
-    Timer timer;
-    double full_time = 0;
-    string line;
+    
+    
 
-    while(getline(speed_input, line)) {
-        timer.reset();
-        dj_hash(line);
-        full_time += timer.current_time();
+    string hashes[4] = {"DJ hash", "md5", "SHA1", "SHA256"};
+    float speed_table[4] = {0};
+    int n_episodes = 500;
+    Timer timer;
+    
+    for(int i = 0; i < n_episodes; i++) {
+        fstream speed_input("./benchmark/stage_2/konstitucija.txt");
+        string line;
+        double full_time = 0;
+        
+        while(getline(speed_input, line)) {
+            timer.reset();
+            dj_hash(line);
+            speed_table[0] += timer.current_time();
+
+            timer.reset();
+            md5(line);
+            speed_table[1] += timer.current_time();
+
+            timer.reset();
+            sha1(line);
+            speed_table[2] += timer.current_time();
+
+            timer.reset();
+            sha256(line);
+            speed_table[3] += timer.current_time();
+
+        }
+            
+        speed_input.close();
     }
 
-    cout<<"Time taken: "<<full_time<<" seconds"<<endl;
+    cout<<"Number of episodes: "<<n_episodes<<endl;
+    for(int i = 0; i<4; i++) {
+        cout<<setw(10)<<left<<hashes[i]<<" avg time: "<<(speed_table[i] / n_episodes) * 1000<<" ms"<<endl;
+    }
+    
+
+    
 
     cout<<"\nSTAGE 3 - COLLISION TEST"<<endl<<endl;
 
@@ -78,7 +108,7 @@ void benchmark() {
     cout<<"Total collission count: "<<collision_count<<" out of "<<100000 - identical_count<<endl;
     cout<<"Continuing..."<<endl;
 
-    cout<<"\nSTAGE 3 - similarity TEST"<<endl<<endl;
+    cout<<"\nSTAGE 3 - SIMILARITY TEST"<<endl<<endl;
 
     fstream similarity_input("./benchmark/stage_4/stage_4__01.txt");
 
@@ -110,13 +140,13 @@ void benchmark() {
 
             bitset<8> bitset_1(hash_1[i]);
             bitset<8> bitset_2(hash_2[i]);
-            equal_count_bit += (bitset_1 & bitset_2).count();
+            equal_count_bit += (8 - (bitset_1 ^ bitset_2).count());
         }
         
  
         //calculating the results
-        hex_similarity = equal_count_hex / 64.0;
-        bit_similarity = equal_count_bit / 512.0;
+        hex_similarity = (equal_count_hex / 64.0) * 100;
+        bit_similarity = (equal_count_bit / 512.0) * 100;
 
         hex_min = (hex_similarity < hex_min) ? hex_similarity : hex_min; 
         hex_max = (hex_similarity > hex_max) ? hex_similarity : hex_max;
