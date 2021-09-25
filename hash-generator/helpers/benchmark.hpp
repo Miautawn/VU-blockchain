@@ -9,7 +9,6 @@
 #include "hashes/md5.h"
 #include "hashes/sha1.h"
 #include "hashes/sha256.h"
-#include "hashes/tom_hash.hpp"
 
 void benchmark(); //function that does the benchmark of the hashing function
 

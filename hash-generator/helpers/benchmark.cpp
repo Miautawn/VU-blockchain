@@ -13,7 +13,7 @@ void benchmark() {
 
         
 
-        string hash = dj_hash(read_from_file(stage_files[i]));
+        string hash = my_hash(read_from_file(stage_files[i]));
         int hash_length = hash.length();
         hash_history.push_back(hash);
 
@@ -31,7 +31,7 @@ void benchmark() {
     cout<<"Reruning the hashing, to verify deterministic property..."<<endl<<endl;
     for (int i = 0; i<stage_files.size(); i++) {
 
-        string hash = dj_hash(read_from_file(stage_files[i]));
+        string hash = my_hash(read_from_file(stage_files[i]));
 
         cout<<stage_files[i]<<" file hash: ";
         if(hash == hash_history[i]) cout<<"...OK"<<endl;
@@ -58,7 +58,7 @@ void benchmark() {
         
         while(getline(speed_input, line)) {
             timer.reset();
-            dj_hash(line);
+            my_hash(line);
             speed_table[0] += timer.current_time();
 
             timer.reset();
@@ -94,18 +94,19 @@ void benchmark() {
     string str_2;
     int collision_count = 0;
     int identical_count = 0;
-    for(int i = 0; i<100000; i++) {
+    int collision_line_n = 100000;
+    for(int i = 0; i<collision_line_n; i++) {
         collision_input >> str_1;
         collision_input >> str_2;
 
         if(str_1 != str_2) {
-            if(dj_hash(str_1) == dj_hash(str_2)) collision_count += 1;
+            if(my_hash(str_1) == my_hash(str_2)) collision_count += 1;
         } else identical_count += 1;
         
     }
 
-    cout<<"Total identical pairs: "<<identical_count<<" out of 100000"<<endl;
-    cout<<"Total collission count: "<<collision_count<<" out of "<<100000 - identical_count<<endl;
+    cout<<"Total identical pairs: "<<identical_count<<" out of "<<collision_line_n<<endl;
+    cout<<"Total collission count: "<<collision_count<<" out of "<<collision_line_n - identical_count<<endl;
     cout<<"Continuing..."<<endl;
 
     cout<<"\nSTAGE 3 - SIMILARITY TEST"<<endl<<endl;
@@ -117,16 +118,18 @@ void benchmark() {
     float hex_min = 100.0;
     float hex_avg = 0.0;
     float hex_max = 0.0;
-    float bit_min = 100;
+    float bit_min = 100.0;
     float bit_avg = 0.0;
     float bit_max = 0.0;
 
-    for(int i = 0; i<100000; i++) {
+    int similarity_line_n = 100000;
+
+    for(int i = 0; i<similarity_line_n; i++) {
         similarity_input >> str_1;
         similarity_input >> str_2;
 
-        hash_1 = dj_hash(str_1);
-        hash_2 = dj_hash(str_2);
+        hash_1 = my_hash(str_1);
+        hash_2 = my_hash(str_2);
 
         
         float hex_similarity = 0;
@@ -159,15 +162,14 @@ void benchmark() {
     }
 
     cout<<"Hex min similarity: "<<hex_min<<"%"<<endl;
-    cout<<"Hex avg similarity: "<<hex_avg / 100000<<"%"<<endl;
+    cout<<"Hex avg similarity: "<<hex_avg / similarity_line_n<<"%"<<endl;
     cout<<"Hex max similarity: "<<hex_max<<"%"<<endl;
     cout<<endl;
     cout<<"Bit min similarity: "<<bit_min<<"%"<<endl;
-    cout<<"Bit avg similarity: "<<bit_avg / 100000<<"%"<<endl;
+    cout<<"Bit avg similarity: "<<bit_avg / similarity_line_n<<"%"<<endl;
     cout<<"Bit max similarity: "<<bit_max<<"%"<<endl;
 
     cout<<"\nBENCHMARK COMPLETE..."<<endl;
-    cout<<"Writing the results to output file...."<<endl;
     cout<<"DONE..."<<endl;
 
 

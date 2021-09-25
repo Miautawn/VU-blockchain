@@ -3,27 +3,43 @@
 
 int main() {
 
-    benchmark();
+    // benchmark();
 
-    // string input;
+    string input;
+    string filename;
+    int selection = 0;
+    while(selection < 1 || selection > 3) {
+        cout<<"1. Read from console"<<endl;
+        cout<<"2. Read from file"<<endl;
+        cout<<"3. Perform benchmark"<<endl;
+        cout<<"Enter your selection: ";
+        cin>>selection;
+        cout<<endl;
+    }
 
-    // if(false/*yes_or_no("Do you want to read from file?")*/) {
+    switch(selection) {
+        case 1: 
+        cout<<"Enter the input: ";
+        cin.ignore();
+        getline(cin, input);
+        break;
 
-    //     // reading from file
-    //     string filename;
-    //     cout<<"Input the name of the txt file: ";
-    //     cin >> filename;
+        case 2:
+        
+        cout<<"Input the name of the txt file: ";
+        cin >> filename;
+        input = read_from_file(filename);
+        break;
 
-    //     input = read_from_file(filename);
-    
-    // } else {
+        case 3:
+        benchmark();
+        break;
+    }
 
-    //     // reading from the console
-    //     cout<<"Enter your phrase: ";
-    //     getline(cin, input);
-    // }
+    cout<<my_hash(input)<<endl;
 
-    // cout<< dj_hash(input) << endl;
+    return 0;
+
 }
 
 

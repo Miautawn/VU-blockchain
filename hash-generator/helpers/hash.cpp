@@ -1,7 +1,7 @@
 #include "hash.hpp"
 
-
-string integer_to_hex(int input) {
+// function to convert integer to hex
+string integer_to_hex(unsigned int input) {
     stringstream input_stream;
     input_stream << setfill('0') << setw(sizeof(int) * 2)
                  << hex << input;
@@ -9,38 +9,60 @@ string integer_to_hex(int input) {
     return input_stream.str();
 }
 
-string dj_hash(string input) {
+// hashing function
+string my_hash(string input) {
 
-    int HEX[8] = {1399877492, 1818847080, 1949048949, 1747722349, 1869573740, 1768384628, 0740324712, 0544766072};
+    // initialize the hex variables
+    unsigned int HEX[8] = {1399877492, 1818847080, 1949048949, 1747722349, 1869573740, 1768384628, 0740324712, 0544766072};
 
-    // int input_length = input.length();
+    const unsigned int input_length = input.length();
     
-    // bitset<64> bit_map[input_length];
+    // initialize the bitset arrays for the input and their copies
+    bitset<32> bit_map[input_length];
+    bitset<32> copy;
+
+    // variables for the sum and hex
     int sum = 0;
-
-    // add the input to bitset array
-    // for (int i = 0; i < input_length; i++) {
-    //     bit_map[i] = input[i];
-    //     sum += int(input[i]);
-    // }
-
-    //shuffle the bits a bit
-    // for (int i = 0; i < input_length; i++) {
-    //     bit_map[i] = bit_map[i] << (bit_map[i].to_ulong() % 64);
-    // }
-
-    // cout<<"suma: "<<sum<<endl;
-
     string full_hex = "";
-    
+
+    //add the input to bitset array and encode it
+    for (int i = 0; i < input_length; i++) {
+
+        
+        bit_map[i] = input[i];
+        const unsigned long char_value = bit_map[i].to_ulong();
+        sum += char_value;
+
+        // create a copy of the char bitset
+        copy = bit_map[i];
+        
+        // reverse the char bitset
+        string a = bit_map[i].to_string();
+        reverse(a.begin(), a.end());
+        bit_map[i] = bitset<32>(a);
+
+        // push the bits to the left and right
+        bit_map[i] >>= ((char_value + sum + input_length) % 16);
+        copy <<= ((char_value + sum + input_length) % 32);
+
+        // merge the bits of the copy and the char
+        bit_map[i] |= copy;
 
 
+        // shuffle the hex variable with the resulting char
+        HEX[i % 8] ^= bit_map[i].to_ulong();
+    }
 
-    // for (int i = 0; i < 8; i++) {
 
-    //     full_hex += integer_to_hex( (HEX[i] | sum) );
+    // make an avelanche effect
+    for (int i = 0; i < 4; i++) {
+        
+        HEX[4+i] ^= HEX[i];
+        HEX[i+1] ^= HEX[i+4];
 
-    // }
+        full_hex += integer_to_hex(HEX[i]);
+        full_hex += integer_to_hex(HEX[i+1]);
+    }
 
-    return "53706f746c696768742c2075682c206d6f6f6e6c696768740781a9ca0593ec3a";
+    return full_hex;
 }

@@ -1,16 +1,5 @@
 #include "utility.hpp"
 
-bool yes_or_no(string text) {
-  string option;
-  while(option != "y" && option != "n")
-  {
-    cout<<text + " y/n: ";
-    cin>>option;
-  }
-  cin.ignore();
-  return option == "y";
-}
-
 string read_from_file(string filename) {
 
     string input = "";
