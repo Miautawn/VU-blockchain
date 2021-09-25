@@ -22,6 +22,7 @@ int main() {
         cout<<"Enter the input: ";
         cin.ignore();
         getline(cin, input);
+        cout<<my_hash(input)<<endl;
         break;
 
         case 2:
@@ -29,6 +30,7 @@ int main() {
         cout<<"Input the name of the txt file: ";
         cin >> filename;
         input = read_from_file(filename);
+        cout<<my_hash(input)<<endl;
         break;
 
         case 3:
@@ -36,7 +38,7 @@ int main() {
         break;
     }
 
-    cout<<my_hash(input)<<endl;
+    
 
     return 0;
 
