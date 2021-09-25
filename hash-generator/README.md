@@ -1,5 +1,5 @@
-# DJ Hash
-Here you can find the files dedicated to "DJ hash" - my personal hashing algorithm.
+# Hash generator by Martynas Jašinskas
+Here you can find the files dedicated to my personal hashing algorithm.
 - [Algorithm](#hash-algorithm)
 - [Benchmark](#hash-benchmark)
 - - [INPUT/OUTPUT SHAPE TEST](#stage-1---inputoutput-shape-test)
@@ -10,9 +10,47 @@ Here you can find the files dedicated to "DJ hash" - my personal hashing algorit
 
 
 ## Hash algorithm
-1. take input
-2. use magic to hash it
-3. return the hash
+Here is the pseudocode for the algorithm.
+
+
+```
+FUNCTION my_hash(input: string): string {
+  HEX <- [8]                                    //initialize an integer array with 8 elements
+  
+  bit_map <- bitset<32>[input.length]           //initialize 32 bit bitset array with [input.length] elements.
+  bit_map_copy <- null
+  
+  sum <- 0                                      //initialize the sum variable
+  full_hex <- ""                                //initialize the final hex string
+  
+  FOR i = 0 TO input.length
+    bit_map[i] <- input[i]                      //put the input char bits to a specific bit_map index
+    bit_value <- int(input[i])                  //take that input numeric value
+    
+    sum <- sum + bit_value
+    copy <- bit_map[i]
+    
+    bit_map[i] <- REVERSE(bit_map[i])           //reverse the bit_map element
+    
+    bit_map[i] <- bit_map[i] RIGHT_SHIFT ((bit_value + sum + input.length) % 16)
+    copy <- copy LEFT_SHIFT ((bit_value + sum + input.length) % 32)
+    
+    bit_map[i] <- bit_map[i] BITWISE_OR copy      //merge the bit_map element and it's copy
+    
+    HEX[i % 8] <- HEX[i % 8] XOR int(bit_map[i])  //modify the HEX elements with this bit_map element
+    
+    
+  FOR i = 0 TO 4                                  //produce an avalanche effect
+    HEX[i + 4] <- HEX[i + 4] XOR HEX[i]
+    HEX[i + 1] <- HEX[i + 1] XOR HEX[i + 4]
+    
+    full_hex <- full_hex + TO_HEX(HEX[i])
+    full_hex <- full_hex + TO_HEX([HEX[i + 1]])
+    
+  RETURN full_hex
+
+}
+```
 
 ___
 
