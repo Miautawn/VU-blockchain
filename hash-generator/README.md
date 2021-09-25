@@ -163,3 +163,50 @@ Bit max similarity: 100%
 ___
 
 ## Results and conclusions
+Here are the results for the hashing requirements:
+**Hashing generator insensitivity to input size & Output hash size stability*
+Yes! This hashing algorithm does accept any sized input and produce 64 length hex string!
+```
+input: a
+43b06c7c40b6657840b665785dfd2d795dfd2d793250a4de3250a4de1b1c4af4
+
+input: To be, or not to be, that is the question 
+23794f744219841042198410557dd474557dd4742db850f32db850f36f5e78c9
+```
+
+**Deterministic property** 
+Yes! This hashing function is deterministic, meaning that it produces the same output for the same input every time
+```
+input: Hey!
+56d06f744e0e66704e0e667040852db940852db92f22f41e2f22f41e130e193c
+
+input: Ignore me!
+c64943d407468a9a07468a9a163dc29b163dc29b7a4040fc7a4040fc464a2c7e
+
+input: Hey!
+56d06f744e0e66704e0e667040852db940852db92f22f41e2f22f41e130e193c
+```
+
+
+**Hash calculation time complexity and speed**
+Unfortunately, this hashing algorithm is way slower compared to other popular hashes (e.g. MD5, SHA256)
+Although, by definition, this function still has **O(n)** time complexity
+
+
+**Collision resistance**
+By running the aformentioned collision test several times with new files, this function produced **0 collisions!** This of course is very dependant on the randomness of generated files
+
+**Hash dissimilaritiest**
+While this hashing function can produce different hashes, it greatly benefits from longer inputs, as it helps it perform a better avalanche effect
+```
+input: snake
+536bb7740787de700787de701a4af7711a4af77115e1ced615e1ced67c7c9bf4
+
+input: SnakE
+536bb77407879e7007879e701a4ab7711a4ab77115e18ed615e18ed67c7c9bf4
+
+input: SnakeSnakeSnake
+8b6b6f74750aa730750aa730ee2f1eb1ee2f1eb1ebe9372eebe9372e1adec55c
+```
+
+As seen from the benchmark above, the average hex similarity is: ```~9%```, while the average bit similarity is: ```~68%```
