@@ -164,7 +164,8 @@ ___
 
 ## Results and conclusions
 Here are the results for the hashing requirements:
-**Hashing generator insensitivity to input size & Output hash size stability*
+
+**Hashing generator insensitivity to input size & Output hash size stability**  
 Yes! This hashing algorithm does accept any sized input and produce 64 length hex string!
 ```
 input: a
@@ -174,7 +175,7 @@ input: To be, or not to be, that is the question
 23794f744219841042198410557dd474557dd4742db850f32db850f36f5e78c9
 ```
 
-**Deterministic property** 
+**Deterministic property**  
 Yes! This hashing function is deterministic, meaning that it produces the same output for the same input every time
 ```
 input: Hey!
@@ -188,15 +189,15 @@ input: Hey!
 ```
 
 
-**Hash calculation time complexity and speed**
+**Hash calculation time complexity and speed**  
 Unfortunately, this hashing algorithm is way slower compared to other popular hashes (e.g. MD5, SHA256)
 Although, by definition, this function still has **O(n)** time complexity
 
 
-**Collision resistance**
+**Collision resistance**  
 By running the aformentioned collision test several times with new files, this function produced **0 collisions!** This of course is very dependant on the randomness of generated files
 
-**Hash dissimilaritiest**
+**Hash dissimilaritiest**  
 While this hashing function can produce different hashes, it greatly benefits from longer inputs, as it helps it perform a better avalanche effect
 ```
 input: snake
