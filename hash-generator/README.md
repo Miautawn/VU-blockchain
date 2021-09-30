@@ -1,5 +1,5 @@
-# DJ Hash
-Here you can find the files dedicated to "DJ hash" - my personal hashing algorithm.
+# Hash generator by Martynas Jašinskas
+Here you can find the files dedicated to my personal hashing algorithm.
 - [Algorithm](#hash-algorithm)
 - [Benchmark](#hash-benchmark)
 - - [INPUT/OUTPUT SHAPE TEST](#stage-1---inputoutput-shape-test)
@@ -10,9 +10,47 @@ Here you can find the files dedicated to "DJ hash" - my personal hashing algorit
 
 
 ## Hash algorithm
-1. take input
-2. use magic to hash it
-3. return the hash
+Here is the pseudocode for the algorithm.
+
+
+```
+FUNCTION my_hash(input: string): string {
+  HEX <- [8]                                    //initialize an integer array with 8 elements
+  
+  bit_map <- bitset<32>[input.length]           //initialize 32 bit bitset array with [input.length] elements.
+  bit_map_copy <- null
+  
+  sum <- 0                                      //initialize the sum variable
+  full_hex <- ""                                //initialize the final hex string
+  
+  FOR i = 0 TO input.length
+    bit_map[i] <- input[i]                      //put the input char bits to a specific bit_map index
+    bit_value <- int(input[i])                  //take that input numeric value
+    
+    sum <- sum + bit_value
+    copy <- bit_map[i]
+    
+    bit_map[i] <- REVERSE(bit_map[i])           //reverse the bit_map element
+    
+    bit_map[i] <- bit_map[i] RIGHT_SHIFT ((bit_value + sum + input.length) % 16)
+    copy <- copy LEFT_SHIFT ((bit_value + sum + input.length) % 32)
+    
+    bit_map[i] <- bit_map[i] BITWISE_OR copy      //merge the bit_map element and it's copy
+    
+    HEX[i % 8] <- HEX[i % 8] XOR int(bit_map[i])  //modify the HEX elements with this bit_map element
+    
+    
+  FOR i = 0 TO 4                                  //produce an avalanche effect
+    HEX[i + 4] <- HEX[i + 4] XOR HEX[i]
+    HEX[i + 1] <- HEX[i + 1] XOR HEX[i + 4]
+    
+    full_hex <- full_hex + TO_HEX(HEX[i])
+    full_hex <- full_hex + TO_HEX([HEX[i + 1]])
+    
+  RETURN full_hex
+
+}
+```
 
 ___
 
@@ -41,19 +79,19 @@ Using these files, the properties of input size insensitivity and output size st
 STAGE 1 - INPUT/OUTPUT SHAPE TEST
 
 ./benchmark/stage_1/stage_1__01.txt hash size: 64...OK
-HASH: 53706f776c69676b742c2077682c206f6f6f6e6f696768770781a9cb0593ec7b
+HASH: 52f44ef451f247f051f247f04cb90ff14cb90ff123148656231486561b1c4af4
 ./benchmark/stage_1/stage_1__02.txt hash size: 64...OK
-HASH: 53706f746c69676c742c2075682c206d6f6f6e6c696768740781a9ee0593ec7e
+HASH: 5363a7745065ae705065ae704d2ee6714d2ee67122836fd622836fd61b1c4af4
 ./benchmark/stage_1/stage_1__03.txt hash size: 64...OK
-HASH: 5375ff7f6c6dff7f742dff7f682dff7f6f6fff7f6967ff7f0785ffff0597ff3f
+HASH: 6410ed82f0a4e300f0a4e3003b36d7ae3b36d7ae1a44f2911a44f29159ebba7b
 ./benchmark/stage_1/stage_1__07.txt hash size: 64...OK
-HASH: 53706f746c696768742c2075682c206d6f6f6e6c696768740781a9ca0593ec3a
+HASH: 53706f7450766670507666704d3d2e714d3d2e712290a7d62290a7d61b1c4af4
 ./benchmark/stage_1/stage_1__06.txt hash size: 64...OK
-HASH: 53796ff66c696fee742d29f7682d29ef6f6f6fee696f69f60789a9ce059bedfe
+HASH: f96f6e961393603e1393603e76db63c276db63c2083654d5083654d5e0f45c8c
 ./benchmark/stage_1/stage_1__04.txt hash size: 64...OK
-HASH: 53766f766c6f677e742e2677682e267f6f6f6e7e69676e760787afde0597ee3e
+HASH: dacfe6dadbddab9edbddab9ed316bb87d316bb87d0325ab4d0325ab47343fb0a
 ./benchmark/stage_1/stage_1__05.txt hash size: 64...OK
-HASH: 53796ff76c696fef742d29f7682d29ef6f6f6fef696f69f70789a9cf059bedff
+HASH: e6c50cb7ff20f507ff20f5073f76f41f3f76f41ff2c025e4f2c025e46b86bff7
 ```
 
 The produced hashes for each of the input file was then saved as history in order to test the deterministic property by runing the same process again and checking whether the hashes match
@@ -82,10 +120,10 @@ Other popular hashing algorithms were tested this way as well.
 STAGE 2 - SPEED TEST
 
 Number of episodes: 500
-DJ hash    avg time: 0.187317ms
-md5        avg time: 1.10642ms
-SHA1       avg time: 1.59822ms
-SHA256     avg time: 2.1451ms
+DJ hash    avg time: 15.8976 ms
+md5        avg time: 1.16586 ms
+SHA1       avg time: 1.72137 ms
+SHA256     avg time: 2.24886 ms
 ```
 ___
 ### STAGE 3 - COLLISION TEST
@@ -100,7 +138,7 @@ First, pairs are checked whether they are identical and if not, their hashes are
 STAGE 3 - COLLISION TEST
 
 Total identical pairs: 0 out of 100000
-Total collission count: 163 out of 100000
+Total collission count: 0 out of 100000
 Continuing...
 ```
 ___
@@ -112,20 +150,64 @@ The data consist of pairs of identical strings except for one character. The str
 Similarity is meassure across characters of the hash output and the bits themselves.
 
 ```
-STAGE 3 - similarity TEST
+STAGE 3 - SIMILARITY TEST
 
-Hex min similarity: 51.5625%
-Hex avg similarity: 83.9772%
-Hex max similarity: 98.4375%
+Hex min similarity: 0%
+Hex avg similarity: 9.52592%
+Hex max similarity: 100%
 
-Bit min similarity: 83.0078%
-Bit avg similarity: 95.5411%
-Bit max similarity: 99.8047%
-
-BENCHMARK COMPLETE...
-Writing the results to output file....
-DONE...
+Bit min similarity: 54.8828%
+Bit avg similarity: 68.2698%
+Bit max similarity: 100%
 ```
 ___
 
 ## Results and conclusions
+Here are the results for the hashing requirements:
+
+**Hashing generator insensitivity to input size & Output hash size stability**  
+Yes! This hashing algorithm does accept any sized input and produce 64 length hex string!
+```
+input: a
+43b06c7c40b6657840b665785dfd2d795dfd2d793250a4de3250a4de1b1c4af4
+
+input: To be, or not to be, that is the question 
+23794f744219841042198410557dd474557dd4742db850f32db850f36f5e78c9
+```
+
+**Deterministic property**  
+Yes! This hashing function is deterministic, meaning that it produces the same output for the same input every time
+```
+input: Hey!
+56d06f744e0e66704e0e667040852db940852db92f22f41e2f22f41e130e193c
+
+input: Ignore me!
+c64943d407468a9a07468a9a163dc29b163dc29b7a4040fc7a4040fc464a2c7e
+
+input: Hey!
+56d06f744e0e66704e0e667040852db940852db92f22f41e2f22f41e130e193c
+```
+
+
+**Hash calculation time complexity and speed**  
+Unfortunately, this hashing algorithm is way slower compared to other popular hashes (e.g. MD5, SHA256)
+Although, by definition, this function still has **O(n)** time complexity
+
+
+**Collision resistance**  
+By running the aformentioned collision test several times with new files, this function produced **0 collisions!** This of course is very dependant on the randomness of generated files
+
+**Hash dissimilaritiest**  
+While this hashing function can produce different hashes, it greatly benefits from longer inputs, as it helps it perform a better avalanche effect
+```
+input: snake
+536bb7740787de700787de701a4af7711a4af77115e1ced615e1ced67c7c9bf4
+
+input: SnakE
+536bb77407879e7007879e701a4ab7711a4ab77115e18ed615e18ed67c7c9bf4
+
+input: SnakeSnakeSnake
+8b6b6f74750aa730750aa730ee2f1eb1ee2f1eb1ebe9372eebe9372e1adec55c
+```
+
+As seen from the benchmark above, the average hex similarity is: ```~9%```, while the average bit similarity is: ```~68%```
