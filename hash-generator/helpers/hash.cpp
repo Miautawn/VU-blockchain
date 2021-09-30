@@ -41,13 +41,13 @@ string my_hash(string input) {
         reverse(a.begin(), a.end());
         bit_map[i] = bitset<32>(a);
 
+
         // push the bits to the left and right
         bit_map[i] >>= ((char_value + sum + input_length) % 16);
         copy <<= ((char_value + sum + input_length) % 32);
 
         // merge the bits of the copy and the char
-        bit_map[i] |= copy;
-
+        bit_map[i] ^= copy;
 
         // shuffle the hex variable with the resulting char
         HEX[i % 8] ^= bit_map[i].to_ulong();
