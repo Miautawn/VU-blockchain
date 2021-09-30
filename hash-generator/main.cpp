@@ -33,6 +33,7 @@ int main() {
 
         case 3:
         benchmark();
+        return 0;
         break;
     }
 

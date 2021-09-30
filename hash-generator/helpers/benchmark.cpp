@@ -11,8 +11,6 @@ void benchmark() {
     vector<string> hash_history = {};
     for (int i = 0; i<stage_files.size(); i++) {
 
-        
-
         string hash = my_hash(read_from_file(stage_files[i]));
         int hash_length = hash.length();
         hash_history.push_back(hash);
@@ -46,7 +44,7 @@ void benchmark() {
     
     
 
-    string hashes[4] = {"DJ hash", "md5", "SHA1", "SHA256"};
+    string hashes[4] = {"My hash", "md5", "SHA1", "SHA256"};
     float speed_table[4] = {0};
     int n_episodes = 500;
     Timer timer;
