@@ -11,3 +11,13 @@ BlockchainUser generate_user(string name) {
 
     return new_user;
 }
+
+BlockchainTransaction generate_transaction(BlockchainUser &sender, BlockchainUser &recipient) {
+    BlockchainTransaction transaction(
+        sender.getPubKey(),
+        recipient.getPubKey(),
+        number_generator.rnd(0, sender.getBalance() / 2)
+    );
+
+    return transaction;
+}
