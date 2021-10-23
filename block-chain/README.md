@@ -1,13 +1,8 @@
 # Imitated Blockchain by Martynas Jašinskas
 
-<<<<<<< HEAD
-- [Setup](#setup)
-
-=======
 - [Setup](setup)
 - [Changelog](changelog)
 - [Program output](program-output)
->>>>>>> 1554c9610b91817ca1f3c2dd701718fe350e3e6e
 
 ## Setup
 
@@ -43,7 +38,8 @@ LOGGING THE BLOCK...
   <summary>Click to expand!</summary>
   
   ```
-    BLOCK: 0
+  BLOCK: 0
+  The Winer Miner: 1
   --------------------------------------------------
 
   BLOCK HASH: 00035e5e0b2117650b2117658f94b6978f94b697a5dfff6ba5dfff6bffa0058c
@@ -84,6 +80,7 @@ ___
 As shown in the [Setup](setup) part, the program outputs logs in which the summary of the block is presented.
 ```
 BLOCK: 1
+The Winer Miner: 3
 --------------------------------------------------
 
 BLOCK HASH: 000588344c0759e64c0759e6ac7882a3ac7882a36dd4d7526dd4d752e3e7c614
