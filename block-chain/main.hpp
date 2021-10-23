@@ -7,6 +7,7 @@
 #include "helpers/transaction.hpp"
 #include "helpers/number_generator.hpp"
 #include "helpers/utility.hpp"
+#include "helpers/hash.hpp"
 
 #include <ctime>
 #include <string>

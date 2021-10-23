@@ -13,7 +13,7 @@ int main() {
 
 
     vector<BlockchainUser> users = {};
-    vector<BlockchainTransaction> transactions = {};
+    vector<BlockchainTransaction> transaction_pool = {};
     vector<BlockchainTransaction> block_pool = {};
     
     RandomInt number_generator;
@@ -50,14 +50,27 @@ int main() {
         int recipient_index = (sender_index > 0) ? sender_index - 1 : sender_index + 1;
         BlockchainTransaction transaction = generate_transaction(users[sender_index], users[recipient_index]);
 
-        transactions.push_back(transaction);
+        transaction_pool.push_back(transaction);
+    }
+
+    cout<<"\nVALIDATING TRANSACTION POOL INTEGRETY..."<<endl;
+    for(int i = 0; i<transaction_pool.size(); i++) {
+
+        string current_hash = my_hash(transaction_pool[i].getSender() +
+                                    transaction_pool[i].getRecipient() +
+                                    to_string(transaction_pool[i].getSum()));
+
+        if(transaction_pool[i].getTransactionID() != current_hash) {
+            cout<<"FOUND ILLEGAL TRANSACTION WITH ID: "<<transaction_pool[i].getTransactionID()<<endl;
+            transaction_pool.erase(transaction_pool.begin() + i);
+        }
     }
 
     cout<<"\nMINING A GENESIS BLOCK"<<endl;
     
     for(int i = 0; i<100; i++) { 
-        block_pool.push_back(transactions.back());
-        transactions.pop_back();
+        block_pool.push_back(transaction_pool.back());
+        transaction_pool.pop_back();
     }
 
     perform_transactions(block_pool, users);
@@ -71,17 +84,17 @@ int main() {
 
     while(yes_or_no("\nAr kasti nauja blocka? ")) {
 
-        if(transactions.size() == 0) {
+        if(transaction_pool.size() == 0) {
             cout<<"NO MORE TRANSACTIONS! BREAKING..."<<endl;
             break;
         }
 
         cout<<"\nMINING A BLOCK..."<<endl;
         for(int i = 0; i<100; i++) { 
-            if(transactions.size() == 0) break;
+            if(transaction_pool.size() == 0) break;
 
-            block_pool.push_back(transactions.back());
-            transactions.pop_back();
+            block_pool.push_back(transaction_pool.back());
+            transaction_pool.pop_back();
         }
 
         blockchain_head = new BlockchainBlock(mine_block(blockchain_head->getHash(),
