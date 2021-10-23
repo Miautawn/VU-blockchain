@@ -8,6 +8,8 @@ Here you can find the files dedicated to my personal hashing algorithm.
 - - [SIMILARITY TEST](#stage-4---similarity-test)
 - [Results](#results-and-conclusions)
 
+- [Setup](#setup)
+
 
 ## Hash algorithm
 Here is the pseudocode for the algorithm.

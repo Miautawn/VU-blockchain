@@ -116,7 +116,8 @@ string constructMerkelTree(vector<BlockchainTransaction> transactions) {
     return current_layer[0];
 }
 
-BlockchainBlock mine_block(string previous_block_hash,
+BlockchainBlock mine_block(int &miner_id,
+                            string previous_block_hash,
                             BlockchainBlock* previous_block_ptr,
                             string version,
                             int difficulty_target,
@@ -163,6 +164,10 @@ BlockchainBlock mine_block(string previous_block_hash,
                 }
 
                 if(success_flag) {
+
+                    //select the winer miner
+                    miner_id = i + 1;
+
                     //get time-stamp
                     string time_stamp = get_time();
 
@@ -180,7 +185,7 @@ BlockchainBlock mine_block(string previous_block_hash,
     }
 }
 
-void log_block(int block_number, BlockchainBlock* block) {
+void log_block(int winer_miner_id, int block_number, BlockchainBlock* block) {
 
     vector<BlockchainTransaction> block_transactions = block->getBody();
 
@@ -188,6 +193,7 @@ void log_block(int block_number, BlockchainBlock* block) {
     ofstream output(filename);
 
     output<< "BLOCK: "<<block_number<<endl;
+    output<<"The Winer Miner: "<<winer_miner_id<<endl;
     output<<string(50, '-')<<endl<<endl;
 
     output<<"BLOCK HASH: "<<block->getHash()<<endl;

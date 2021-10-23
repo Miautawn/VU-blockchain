@@ -24,13 +24,14 @@ void perform_transactions(vector<BlockchainTransaction> &transaction_pool,
                         vector<BlockchainUser> &users);
 
 // mines the block and returns it
-BlockchainBlock mine_block(string previous_block_hash,
+BlockchainBlock mine_block(int &miner_id,
+                            string previous_block_hash,
                             BlockchainBlock* previous_block_ptr,
                             string version,
                             int difficulty_target,
                             vector<vector<BlockchainTransaction>> candidate_pools);
 
 //logs the block
-void log_block(int block_number, BlockchainBlock* block);
+void log_block(int winer_miner_id, int block_number, BlockchainBlock* block);
 
 #endif

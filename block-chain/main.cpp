@@ -8,6 +8,7 @@ int main() {
     int block_capacity = 100;
     int difficulty_target = 3;
     int block_count = 0;
+    int winer_miner_id = 0;
     string version = "0.1";
     string genesis_previous_hash = "sveiki, kaip sekasi?";
     BlockchainBlock* blockchain_head;
@@ -70,12 +71,12 @@ int main() {
     cout<<"\nMINING A GENESIS BLOCK..."<<endl;
     
     candidate_pools = generate_candidate_pools(transaction_pool, block_capacity);
-    blockchain_head = new BlockchainBlock(mine_block(genesis_previous_hash, nullptr,
+    blockchain_head = new BlockchainBlock(mine_block(winer_miner_id, genesis_previous_hash, nullptr,
                                          version, difficulty_target, candidate_pools));
 
 
     perform_transactions(transaction_pool, blockchain_head->getBody(), users);
-    log_block(block_count, blockchain_head);
+    log_block(winer_miner_id, block_count, blockchain_head);
     candidate_pools.clear();
     block_count++;
 
@@ -88,14 +89,14 @@ int main() {
 
         cout<<"\nMINING A BLOCK..."<<endl;
         candidate_pools = generate_candidate_pools(transaction_pool, block_capacity);
-        blockchain_head = new BlockchainBlock(mine_block(blockchain_head->getHash(),
+        blockchain_head = new BlockchainBlock(mine_block(winer_miner_id, blockchain_head->getHash(),
                                                         blockchain_head, version,
                                                         difficulty_target, candidate_pools));
 
         cout<<"DONE!... PERFORMING TRANSACTIONS..."<<endl;
         perform_transactions(transaction_pool, blockchain_head->getBody(), users);
         cout<<"LOGGING THE BLOCK..."<<endl;
-        log_block(block_count, blockchain_head);
+        log_block(winer_miner_id, block_count, blockchain_head);
         candidate_pools.clear();
         block_count++;
     }
