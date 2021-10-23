@@ -16,7 +16,7 @@ BlockchainTransaction generate_transaction(BlockchainUser &sender, BlockchainUse
     BlockchainTransaction transaction(
         sender.getPubKey(),
         recipient.getPubKey(),
-        number_generator.rnd(0, sender.getBalance() / 2)
+        number_generator.rnd(1, sender.getBalance())
     );
 
     return transaction;

@@ -74,6 +74,37 @@ void perform_transactions(vector<BlockchainTransaction> transactions, vector<Blo
 
 }
 
+string constructMerkelTree(vector<BlockchainTransaction> transactions) {
+
+    vector<string> current_layer = {};
+    vector<string> next_layer = {};
+
+    //populate the first layer
+    for (BlockchainTransaction element : transactions) {
+        current_layer.push_back(element.getTransactionID());
+    }
+
+    //how many layers there will be
+    int n_loops = ceil(log2(current_layer.size()));
+
+    for(int i = 0; i<n_loops; i++) {
+    
+        //balance the tree
+        if(current_layer.size() % 2 != 0) current_layer.push_back(current_layer.back());
+
+        for(int j = 0; j<current_layer.size(); j+=2) {
+            next_layer.push_back( my_hash(my_hash(current_layer[j] + current_layer[j+1])) );
+        }
+
+        current_layer.clear();
+        current_layer = next_layer;
+        next_layer.clear();
+       
+    }
+
+    return current_layer[0];
+}
+
 BlockchainBlock mine_block(string previous_block_hash,
                             BlockchainBlock* previous_block_ptr,
                             string version,
@@ -84,12 +115,8 @@ BlockchainBlock mine_block(string previous_block_hash,
     string master_string = "";
     string master_hash = "";
 
-    //calculating "merkel root hash"
-    string merker_root_string = "";
-    for(int i = 0; i<transactions.size(); i++) {
-        merker_root_string += transactions[i].getTransactionID();
-    }
-    string merkel_root_hash = my_hash(merker_root_string);
+    //constructing merkel tree
+    string merkel_root_hash = constructMerkelTree(transactions);
 
     //mining the block
     int nonce = 0;
@@ -125,8 +152,8 @@ BlockchainBlock mine_block(string previous_block_hash,
     // return the block
     return BlockchainBlock(previous_block_hash, previous_block_ptr,
                                     master_hash, time_stamp,
-                                    version, merkel_root_hash, nonce,
-                                    difficulty_target, transactions);
+                                    version, nonce, difficulty_target,
+                                    transactions, merkel_root_hash);
 }
 
 void log_block(int block_number, BlockchainBlock* block, vector<BlockchainTransaction> block_transactions) {
@@ -161,5 +188,6 @@ void log_block(int block_number, BlockchainBlock* block, vector<BlockchainTransa
 
 
 }
+
 
 

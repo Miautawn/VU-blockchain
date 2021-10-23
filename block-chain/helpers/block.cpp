@@ -2,15 +2,14 @@
 
 BlockchainBlock::BlockchainBlock(string previous_hash, BlockchainBlock* previous_block_ptr,
                                 string hash, string time_stamp,
-                                string version, string merkel_root_hash,
-                                int nonce, int difficulty_target,
-                                vector<BlockchainTransaction> body) : 
+                                string version, int nonce, int difficulty_target,
+                                vector<BlockchainTransaction> body, string merkel_root_hash) : 
 
                                 previous_block{previous_hash, previous_block_ptr},
                                 hash{hash}, time_stamp{time_stamp},
-                                version{version}, merkel_root_hash{merkel_root_hash},
-                                nonce{nonce}, difficulty_target{difficulty_target},
-                                body{body} {} 
+                                version{version}, nonce{nonce},
+                                difficulty_target{difficulty_target},
+                                body{body}, merkel_root_hash{merkel_root_hash} { } 
 
 string BlockchainBlock::getHash() {
     return hash;
@@ -47,3 +46,4 @@ string BlockchainBlock::getPreviousHash() {
 BlockchainBlock::~BlockchainBlock() {
     previous_block.~HashPointer();
 }
+

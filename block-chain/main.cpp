@@ -39,13 +39,14 @@ int main() {
     }
 
     cout<<"\nCREATING A TRANSACTION POOL..."<<endl;
-   
-
 
     for(int i = 0; i<n_transactions; i++) {
+
+        //finding a sender with non-zero balance
         int sender_index = number_generator.rnd(0, users.size()); 
         while(users[sender_index].getBalance() <= 0) sender_index = number_generator.rnd(0, users.size()); 
 
+        //the recipient is the sender index neightbour
         int recipient_index = (sender_index > 0) ? sender_index - 1 : sender_index + 1;
         BlockchainTransaction transaction = generate_transaction(users[sender_index], users[recipient_index]);
 

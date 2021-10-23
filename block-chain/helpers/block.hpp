@@ -19,12 +19,13 @@ class BlockchainBlock {
         int difficulty_target;
         vector<BlockchainTransaction> body;
 
+
     public:
         BlockchainBlock(string previous_hash, BlockchainBlock* previous_block_ptr,
                         string hash, string time_stamp,
-                        string version, string merkel_root_hash,
-                        int nonce, int difficulty_target,
-                        vector<BlockchainTransaction> body);
+                        string version, int nonce,
+                        int difficulty_target,
+                        vector<BlockchainTransaction> body, string merkel_root_hash);
 
         // Getters & Setters
         string getHash();
