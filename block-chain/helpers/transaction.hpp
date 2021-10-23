@@ -11,15 +11,17 @@ class BlockchainTransaction {
         string sender;
         string recipient;
         int sum;
+        int pool_index;
 
     public:
-        BlockchainTransaction(string sender, string recipient, int sum);
+        BlockchainTransaction(string sender, string recipient, int sum, int pool_index);
 
         // Getters & Setters
         string getTransactionID();
         string getSender();
         string getRecipient();
         int getSum();
+        int getIndex();
 };
 
 #endif

@@ -49,7 +49,10 @@ vector<string> list_dir(string path) {
     return files;
 }
 
-void perform_transactions(vector<BlockchainTransaction> transactions, vector<BlockchainUser> &users) {
+void perform_transactions(vector<BlockchainTransaction> &transaction_pool,
+                        vector<BlockchainTransaction> transactions,
+                        vector<BlockchainUser> &users) {
+
     for(BlockchainTransaction transaction : transactions) {
 
         string sender_pub_key = transaction.getSender();
@@ -69,6 +72,14 @@ void perform_transactions(vector<BlockchainTransaction> transactions, vector<Blo
 
                 users[i].setBalance(new_balance);
             }
+        }
+
+        for(int i = 0; i<transaction_pool.size(); i++) {
+            if(transaction_pool[i].getIndex() == transaction.getIndex()) {
+                transaction_pool.erase(transaction_pool.begin() + i);
+                break;
+            }
+            
         }
     }
 
@@ -109,54 +120,69 @@ BlockchainBlock mine_block(string previous_block_hash,
                             BlockchainBlock* previous_block_ptr,
                             string version,
                             int difficulty_target,
-                            vector<BlockchainTransaction> transactions) {
+                            vector<vector<BlockchainTransaction>> candidate_pools) {
 
-    //creating the master string which will be used to mine this block
-    string master_string = "";
-    string master_hash = "";
+    int max_attemps = 100000;
 
-    //constructing merkel tree
-    string merkel_root_hash = constructMerkelTree(transactions);
+    while(true) {
 
-    //mining the block
-    int nonce = 0;
-    bool success_flag = false;
-    while(!success_flag) {
-        
-        //generate a random nonce
-        nonce = random_generator.rnd(0, 999999);
+        bool success_flag = false;
+        for(int i = 0; i<candidate_pools.size(); i++) {
 
-        //combine the header elements
-        master_string = to_string(nonce) + 
-                        previous_block_hash + 
-                        version + merkel_root_hash + 
-                        to_string(difficulty_target);
+            //creating the master string which will be used to mine this block
+            string master_string = "";
+            string master_hash = "";
 
-        //produce a candidate hash
-        master_hash = my_hash(master_string);
+            //constructing merkel tree
+            string merkel_root_hash = constructMerkelTree(candidate_pools[i]);
 
-        //check the candidate hash
-        for(int i = 0; i<difficulty_target; i++) {
-            if(master_hash[i] != '0') break;
-            if(i == difficulty_target - 1) {
-                success_flag = true;
+            //nonce of the block
+            int nonce = 0;
+
+            for(int j = 0; j < max_attemps; j++) {
+
+                
+                //generate a random nonce
+                nonce = random_generator.rnd(0, 999999);
+
+                //combine the header elements
+                master_string = to_string(nonce) + 
+                                previous_block_hash + 
+                                version + merkel_root_hash + 
+                                to_string(difficulty_target);
+
+                //produce a candidate hash
+                master_hash = my_hash(master_string);
+
+                //check the candidate hash
+                for(int i = 0; i<difficulty_target; i++) {
+                    if(master_hash[i] != '0') break;
+                    if(i == difficulty_target - 1) {
+                        success_flag = true;
+                    }
+                }
+
+                if(success_flag) {
+                    //get time-stamp
+                    string time_stamp = get_time();
+
+                    // return the block
+                    return BlockchainBlock(previous_block_hash, previous_block_ptr,
+                                                        master_hash, time_stamp,
+                                                        version, nonce, difficulty_target,
+                                                        candidate_pools[i], merkel_root_hash);
+                }
             }
-            
         }
 
+        cout<<"All candidates failed... decreasing the difficulty..."<<endl;
+        difficulty_target--;
     }
-
-    //get time-stamp
-    string time_stamp = get_time();
-
-    // return the block
-    return BlockchainBlock(previous_block_hash, previous_block_ptr,
-                                    master_hash, time_stamp,
-                                    version, nonce, difficulty_target,
-                                    transactions, merkel_root_hash);
 }
 
-void log_block(int block_number, BlockchainBlock* block, vector<BlockchainTransaction> block_transactions) {
+void log_block(int block_number, BlockchainBlock* block) {
+
+    vector<BlockchainTransaction> block_transactions = block->getBody();
 
     string filename = "logs/block-" + to_string(block_number) + ".txt";
     ofstream output(filename);

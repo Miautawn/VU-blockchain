@@ -5,7 +5,8 @@ int main() {
 
     int n_users = 1000;
     int n_transactions = 10000;
-    int difficulty_target = 1;
+    int block_capacity = 100;
+    int difficulty_target = 3;
     int block_count = 0;
     string version = "0.1";
     string genesis_previous_hash = "sveiki, kaip sekasi?";
@@ -14,11 +15,11 @@ int main() {
 
     vector<BlockchainUser> users = {};
     vector<BlockchainTransaction> transaction_pool = {};
-    vector<BlockchainTransaction> block_pool = {};
+    vector<vector<BlockchainTransaction>> candidate_pools = {};
     
     RandomInt number_generator;
 
-    cout<<"GENERATING USERS..."<<endl;
+    cout<<"\nGENERATING USERS..."<<endl;
    
     ifstream input_names("generator_files/names.txt");
     string name;
@@ -27,7 +28,7 @@ int main() {
         users.push_back( generate_user( name ));
     } 
 
-    cout<<"\nVALIDATING PUBLIC KEYS..."<<endl;
+    cout<<"VALIDATING PUBLIC KEYS..."<<endl;
     for(int i = 0 ; i < n_users; i++) {
         for(int j = 0; j < n_users; j++) {
 
@@ -38,7 +39,7 @@ int main() {
         }
     }
 
-    cout<<"\nCREATING A TRANSACTION POOL..."<<endl;
+    cout<<"CREATING A TRANSACTION POOL..."<<endl;
 
     for(int i = 0; i<n_transactions; i++) {
 
@@ -48,12 +49,12 @@ int main() {
 
         //the recipient is the sender index neightbour
         int recipient_index = (sender_index > 0) ? sender_index - 1 : sender_index + 1;
-        BlockchainTransaction transaction = generate_transaction(users[sender_index], users[recipient_index]);
+        BlockchainTransaction transaction = generate_transaction(users[sender_index], users[recipient_index], i);
 
         transaction_pool.push_back(transaction);
     }
 
-    cout<<"\nVALIDATING TRANSACTION POOL INTEGRETY..."<<endl;
+    cout<<"VALIDATING TRANSACTION POOL INTEGRETY..."<<endl;
     for(int i = 0; i<transaction_pool.size(); i++) {
 
         string current_hash = my_hash(transaction_pool[i].getSender() +
@@ -66,51 +67,39 @@ int main() {
         }
     }
 
-    cout<<"\nMINING A GENESIS BLOCK"<<endl;
+    cout<<"\nMINING A GENESIS BLOCK..."<<endl;
     
-    for(int i = 0; i<100; i++) { 
-        block_pool.push_back(transaction_pool.back());
-        transaction_pool.pop_back();
-    }
-
-    perform_transactions(block_pool, users);
+    candidate_pools = generate_candidate_pools(transaction_pool, block_capacity);
     blockchain_head = new BlockchainBlock(mine_block(genesis_previous_hash, nullptr,
-                                         version, difficulty_target, block_pool));
-    log_block(block_count, blockchain_head, block_pool);
-    block_pool.clear();
+                                         version, difficulty_target, candidate_pools));
+
+
+    perform_transactions(transaction_pool, blockchain_head->getBody(), users);
+    log_block(block_count, blockchain_head);
+    candidate_pools.clear();
     block_count++;
 
 
-
     while(yes_or_no("\nAr kasti nauja blocka? ")) {
-
-        if(transaction_pool.size() == 0) {
-            cout<<"NO MORE TRANSACTIONS! BREAKING..."<<endl;
+        if(transaction_pool.size() <= 0) {
+            cout<<"NO MORE TRANSACTIONS... ENDING..."<<endl;
             break;
         }
 
         cout<<"\nMINING A BLOCK..."<<endl;
-        for(int i = 0; i<100; i++) { 
-            if(transaction_pool.size() == 0) break;
-
-            block_pool.push_back(transaction_pool.back());
-            transaction_pool.pop_back();
-        }
-
+        candidate_pools = generate_candidate_pools(transaction_pool, block_capacity);
         blockchain_head = new BlockchainBlock(mine_block(blockchain_head->getHash(),
                                                         blockchain_head, version,
-                                                        difficulty_target, block_pool));
+                                                        difficulty_target, candidate_pools));
 
         cout<<"DONE!... PERFORMING TRANSACTIONS..."<<endl;
-        perform_transactions(block_pool, users);
+        perform_transactions(transaction_pool, blockchain_head->getBody(), users);
         cout<<"LOGGING THE BLOCK..."<<endl;
-        log_block(block_count, blockchain_head, block_pool);
-        block_pool.clear();
+        log_block(block_count, blockchain_head);
+        candidate_pools.clear();
         block_count++;
     }
 
- 
-    
     return 0;
 
 

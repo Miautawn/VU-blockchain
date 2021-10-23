@@ -17,17 +17,20 @@ string get_time(); //gets current time
 string read_from_file(string filename); //reads the specified file
 vector<string> list_dir(string path); //lists the specified directory
 
+
 //updates user balances
-void perform_transactions(vector<BlockchainTransaction> transactions, vector<BlockchainUser> &users);
+void perform_transactions(vector<BlockchainTransaction> &transaction_pool,
+                        vector<BlockchainTransaction> transactions,
+                        vector<BlockchainUser> &users);
 
 // mines the block and returns it
 BlockchainBlock mine_block(string previous_block_hash,
                             BlockchainBlock* previous_block_ptr,
                             string version,
                             int difficulty_target,
-                            vector<BlockchainTransaction> transactions);
+                            vector<vector<BlockchainTransaction>> candidate_pools);
 
 //logs the block
-void log_block(int block_number, BlockchainBlock* block, vector<BlockchainTransaction> block_transactions);
+void log_block(int block_number, BlockchainBlock* block);
 
 #endif
