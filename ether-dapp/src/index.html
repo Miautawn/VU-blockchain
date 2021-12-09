@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Martyno Jašinsko dApp</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="js/web3.min.js"></script>
+        <script src="js/truffle-contract.js"></script>
+        <script src="js/app.js"></script>
+
+    </head>
+
+    <body>
+
+        <div class = "main_input">
+
+            <p class = "main_title">POST</p>
+
+            <label>Name</label><br>
+            <input id="title" type="text" class= "input_title"><br>
+
+            <label>Message</label><br>
+            <textarea id="description" class="input_description"></textarea>
+            <br><br>
+
+            <button class="submit" onclick="sendOrder()" >Submit</button>
+            <br><br><br>
+
+            <label id="price_tag" class="price_label">Price: 56%</label><br>
+            <button id="post_button" class="post" onclick="post_it()">POST IT!</button>
+
+            
+
+        </div>
+
+
+        <div class = "main_form">
+
+            <p class = "main_title">NEWSPAPER</p>
+
+            <div id="page_container" class = "page_container">
+
+            <template id = "single_container_template">
+
+
+                
+                <div id="single_container" class = "singe_article">
+                    <div class="single_image">
+                        <img class = "profile_img" src="images/usr.png">
+                    </div>
+
+                    <div class = "single_text">
+
+                        <h1 id="author_name" class = "author_name">Hiiiiii</h1>
+                        <textarea disabled id="article_text", class= "article_text">fhjdskhkfdh</textarea>
+
+                    </div>
+                </div>
+
+            </template>
+
+
+            </div>
+
+            
+
+        </div>
+
+    </body>
+
+
+</html>
+
