@@ -1,0 +1,166 @@
+* {
+    box-sizing: border-box;
+}
+
+.main_title {
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+
+body {
+    background-image: url('../images/background.jpeg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.input_description {
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 20px;
+  width: 520px;
+  height: 150px;
+  margin-left: 40px;
+  margin-right: 40px;
+
+}
+
+.input_title {
+  margin-bottom: 20px;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 30px;
+  margin-left: 40px;
+  margin-right: 40px;
+  width: 400px;
+
+}
+
+label {
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 20px;
+  margin-left: 45px;
+  margin-right: 20px;
+}
+
+.price_label {
+
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 40px;
+  margin-left: 40px;
+  visibility: hidden;
+}
+
+hr {
+  border-color: black;
+}
+
+/* the main form background */
+.main_form {
+  background-color: rgba(255,255,255,0.9);
+  height: 900px;
+  width: 900px;
+  margin-right: 50px;
+  margin-top: 50px;
+  float: right;
+}
+
+.main_input {
+  background-color: rgba(255,255,255,0.9);
+  height: 600px;
+  width: 600px;
+  margin-left: 50px;
+  margin-top: 200px;
+  float: left;
+}
+
+.page_container {
+  background-color: transparent;
+  height: 750px;
+  width: 820px;
+  margin-left: 40px;
+  margin-right: 40px;
+
+}
+
+/* the title of the form */
+.main_title {
+  width: 100%;
+  font-size: 300%;
+  /* background-color: green; */
+  text-align: center;
+  margin: auto;
+  padding-top: 20px;
+  padding-bottom: 30px;
+}
+
+
+/* submit button */
+.submit {
+  width: 520px;
+  height: 50px;
+  margin-right: 40px;
+  margin-left: 40px;
+  background-color: transparent;
+  border-width: 4px;
+  border-color: black;
+  font-size:small;
+
+}
+.submit:hover {
+  background-color: rgba(255,255,255,0.9);
+}
+
+/* submit button */
+.post {
+  width: 520px;
+  height: 50px;
+  margin-right: 40px;
+  margin-left: 40px;
+  background-color: transparent;
+  border-width: 4px;
+  border-color: black;
+  font-size:small;
+  visibility: hidden;
+
+}
+.post:hover {
+  background-color: rgba(255,255,255,0.9);
+}
+
+.single_image {
+  width: 150px;
+  height: 150px;
+  float: left;
+}
+
+.single_text {
+  width: 670px;
+  height: 150px;
+  float: right;
+}
+
+.profile_img {
+  width: 100%;
+  height: 100%;
+}
+
+.author_name {
+  width: 100%;
+  height: 40px;
+  margin-top: 0;
+  margin-left: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  /* background-color: chartreuse; */
+  padding-left: 40px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.article_text {
+  /* background-color: brown; */
+  resize: none;
+  width: 100%;
+  height: 60px;
+  padding-left: 40px;
+  background-color: transparent;
+  border: 0px;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
