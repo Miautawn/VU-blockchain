@@ -40,15 +40,6 @@ string read_from_file(string filename) {
 
 }
 
-vector<string> list_dir(string path) {
-
-    vector<string> files = {};
-    for (const auto entry : filesystem::directory_iterator(path))
-        files.push_back(entry.path());
-
-    return files;
-}
-
 void perform_transactions(vector<BlockchainTransaction> &transaction_pool,
                         vector<BlockchainTransaction> transactions,
                         vector<BlockchainUser> &users) {
@@ -85,36 +76,63 @@ void perform_transactions(vector<BlockchainTransaction> &transaction_pool,
 
 }
 
-string constructMerkelTree(vector<BlockchainTransaction> transactions) {
 
-    vector<string> current_layer = {};
-    vector<string> next_layer = {};
+// Merkle Root Hash
+string create_merkle(vector<BlockchainTransaction> transactions)
+{
 
-    //populate the first layer
-    for (BlockchainTransaction element : transactions) {
-        current_layer.push_back(element.getTransactionID());
+    bc::hash_list merkle = {};
+
+    for(int i = 0; i<transactions.size(); i++) {
+
+        char char_array[65];
+        strcpy(char_array, transactions[i].getTransactionID().c_str());
+        
+        bc::hash_digest temp_hash = bc::hash_literal(char_array);
+        merkle.push_back(temp_hash);
     }
 
-    //how many layers there will be
-    int n_loops = ceil(log2(current_layer.size()));
+    // Stop if hash list is empty or contains one element
+    if (merkle.empty()) return bc::encode_base16(bc::null_hash);
+    else if (merkle.size() == 1) return bc::encode_base16(merkle[0]);
 
-    for(int i = 0; i<n_loops; i++) {
-    
-        //balance the tree
-        if(current_layer.size() % 2 != 0) current_layer.push_back(current_layer.back());
 
-        for(int j = 0; j<current_layer.size(); j+=2) {
-            next_layer.push_back( my_hash(my_hash(current_layer[j] + current_layer[j+1])) );
+    // While there is more than 1 hash in the list, keep looping...
+    while (merkle.size() > 1) {
+
+        // If number of hashes is odd, duplicate last hash in the list.
+        if (merkle.size() % 2 != 0) merkle.push_back(merkle.back());
+
+        // List size is now even.
+        assert(merkle.size() % 2 == 0);
+
+        // New hash list.
+        bc::hash_list new_merkle;
+
+        // Loop through hashes 2 at a time.
+        for (auto it = merkle.begin(); it != merkle.end(); it += 2)
+        {
+            // Join both current hashes together (concatenate).
+            bc::data_chunk concat_data(bc::hash_size * 2);
+            auto concat = bc::serializer<decltype(concat_data.begin())>(concat_data.begin());
+
+            concat.write_hash(*it);
+            concat.write_hash(*(it + 1));
+
+            // Hash both of the hashes.
+            bc::hash_digest new_root = bc::bitcoin_hash(concat_data);
+
+            // Add this to the new list.
+            new_merkle.push_back(new_root);
         }
 
-        current_layer.clear();
-        current_layer = next_layer;
-        next_layer.clear();
-       
+        // This is the new list.
+        merkle = new_merkle;
     }
-
-    return current_layer[0];
+    // Finally we end up with a single item.
+    return bc::encode_base16(merkle[0]);
 }
+
 
 BlockchainBlock mine_block(int &miner_id,
                             string previous_block_hash,
@@ -135,7 +153,7 @@ BlockchainBlock mine_block(int &miner_id,
             string master_hash = "";
 
             //constructing merkel tree
-            string merkel_root_hash = constructMerkelTree(candidate_pools[i]);
+            string merkel_root_hash = create_merkle(candidate_pools[i]);
 
             //nonce of the block
             int nonce = 0;

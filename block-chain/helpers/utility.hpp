@@ -8,9 +8,9 @@
 #include "number_generator.hpp"
 #include "user.hpp"
 #include <fstream>
-#include <filesystem>
 #include <string>
 #include <vector>
+#include <bitcoin/system.hpp>
 
 bool yes_or_no(string text); //asks yes or no question
 string get_time(); //gets current time
